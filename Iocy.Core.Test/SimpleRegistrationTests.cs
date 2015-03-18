@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Iocy.Core.Test.TestClasses;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Iocy.Core.Test
 {
@@ -13,7 +15,7 @@ namespace Iocy.Core.Test
             iocy.For<IStupidService>(service);
 
             var stupidService = iocy.Reslove<IStupidService>();
-            Assert.AreEqual(service, stupidService.GetNumber());
+            Assert.AreEqual(service, stupidService);
         }
 
         [TestMethod]
@@ -21,23 +23,24 @@ namespace Iocy.Core.Test
         {
             var iocy = new IocyContainer();
             
-            iocy.For<IStupidService>().ImplementedBy<StupidService>();
+            iocy.For<IStupidService>().ImplementedBy<StupidService>().End();
 
             var resolved = iocy.Reslove<IStupidService>();
             Assert.AreEqual(typeof(StupidService), resolved.GetType());
         }
-    }
 
-    public interface IStupidService
-    {
-        int GetNumber();
-    }
-
-    class StupidService : IStupidService
-    {
-        public int GetNumber()
+        [TestMethod]
+        public void RegisterByTypeWithDepends()
         {
-            return 42;
+            var iocy = new IocyContainer();
+
+            iocy.For<IStupidService>().ImplementedBy<ParameterizedStupidService>()
+                                        .DependsOn("first", "test")
+                                        .DependsOn("second", 15)
+                                        .End();
+            
+            var resolved = iocy.Reslove<IStupidService>();
+            Assert.AreEqual(typeof(ParameterizedStupidService), resolved.GetType());
         }
     }
 }

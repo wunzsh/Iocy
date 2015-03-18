@@ -50,8 +50,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestClasses\IStupidService.cs" />
+    <Compile Include="TestClasses\ParameterizedStupidService.cs" />
     <Compile Include="SimpleRegistrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestClasses\StupidService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Iocy.Core\Iocy.Core.csproj">
