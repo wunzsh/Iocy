@@ -45,6 +45,7 @@
     <Compile Include="Exceptions\ServiceNotRegisteredException.cs" />
     <Compile Include="IocyContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceRegistration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

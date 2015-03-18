@@ -6,13 +6,25 @@ namespace Iocy.Core.Test
     public class SimpleRegistrationTests
     {
         [TestMethod]
-        public void RegisterAndReslove()
+        public void RegisterInstance()
         {
             var iocy = new IocyContainer();
-            iocy.For<IStupidService>(new StupidService());
+            var service = new StupidService();
+            iocy.For<IStupidService>(service);
 
             var stupidService = iocy.Reslove<IStupidService>();
-            Assert.AreEqual(42, stupidService.GetNumber());
+            Assert.AreEqual(service, stupidService.GetNumber());
+        }
+
+        [TestMethod]
+        public void RegisterByType()
+        {
+            var iocy = new IocyContainer();
+            
+            iocy.For<IStupidService>().ImplementedBy<StupidService>();
+
+            var resolved = iocy.Reslove<IStupidService>();
+            Assert.AreEqual(typeof(StupidService), resolved.GetType());
         }
     }
 
