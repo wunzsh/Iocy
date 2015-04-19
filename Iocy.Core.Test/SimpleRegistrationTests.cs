@@ -1,4 +1,5 @@
-﻿using Iocy.Core.Test.TestClasses;
+﻿using Iocy.Core.Registration;
+using Iocy.Core.Test.TestClasses;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,9 +11,11 @@ namespace Iocy.Core.Test
         [TestMethod]
         public void RegisterInstance()
         {
-            var iocy = new IocyContainer();
             var service = new StupidService();
-            iocy.For<IStupidService>(service);
+            var iocy = new IocyContainer(new[]
+                                             {
+                                                 new ServiceRegistration<IStupidService>().For(service)
+                                             });
 
             var stupidService = iocy.Reslove<IStupidService>();
             Assert.AreEqual(service, stupidService);
@@ -21,9 +24,10 @@ namespace Iocy.Core.Test
         [TestMethod]
         public void RegisterByType()
         {
-            var iocy = new IocyContainer();
-            
-            iocy.For<IStupidService>().ImplementedBy<StupidService>().End();
+            var iocy = new IocyContainer(new[]
+                                             {
+                                                 new ServiceRegistration<IStupidService>().ImplementedBy<StupidService>()
+                                             });
 
             var resolved = iocy.Reslove<IStupidService>();
             Assert.AreEqual(typeof(StupidService), resolved.GetType());
@@ -32,15 +36,32 @@ namespace Iocy.Core.Test
         [TestMethod]
         public void RegisterByTypeWithDepends()
         {
-            var iocy = new IocyContainer();
+            var iocy = new IocyContainer(new[]
+                                             {
+                                                 new ServiceRegistration<IStupidService>().ImplementedBy<ParameterizedStupidService>()
+                                                                                          .DependsOn("first", "test")
+                                                                                          .DependsOn("second", 15)
+                                             });
 
-            iocy.For<IStupidService>().ImplementedBy<ParameterizedStupidService>()
-                                        .DependsOn("first", "test")
-                                        .DependsOn("second", 15)
-                                        .End();
-            
+
             var resolved = iocy.Reslove<IStupidService>();
             Assert.AreEqual(typeof(ParameterizedStupidService), resolved.GetType());
+        }
+
+        [TestMethod]
+        public void RecursiveResolve()
+        {
+            var iocy = new IocyContainer(new IServiceRegistration[]
+                                             {
+                                                 new ServiceRegistration<IStupidService>().ImplementedBy<DependendOnAnotherStupidService>()
+                                                                                          .DependsOn("first", "test")
+                                                                                          .DependsOn("second", 15),
+                                                 new ServiceRegistration<ISecondStupidService>().ImplementedBy<SecondStupidService>() 
+                                             });
+
+
+            var resolved = iocy.Reslove<IStupidService>();
+            Assert.AreEqual(typeof(DependendOnAnotherStupidService), resolved.GetType());
         }
     }
 }

@@ -17,4 +17,25 @@
             return _first.Length + _second;
         }
     }
+
+    public class DependendOnAnotherStupidService : IStupidService
+    {
+        private readonly string _first;
+
+        private readonly int _second;
+
+        private readonly ISecondStupidService _secondStupidService;
+
+        public DependendOnAnotherStupidService(string first, int second, ISecondStupidService secondStupidService)
+        {
+            _first = first;
+            _second = second;
+            _secondStupidService = secondStupidService;
+        }
+
+        public int GetNumber()
+        {
+            return _first.Length + _second;
+        }
+    }
 }

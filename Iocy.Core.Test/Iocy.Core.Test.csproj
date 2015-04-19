@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestClasses\ISecondStupidService.cs" />
     <Compile Include="TestClasses\IStupidService.cs" />
     <Compile Include="TestClasses\ParameterizedStupidService.cs" />
     <Compile Include="SimpleRegistrationTests.cs" />
